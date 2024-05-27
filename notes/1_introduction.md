@@ -1,6 +1,7 @@
 ## 1. INTRODUCTION
 
 ### Project Setup
+> NextJS를 `create-next-app`이 아닌 수동으로 설치해보자
 
 아래 command로 npm init
 
