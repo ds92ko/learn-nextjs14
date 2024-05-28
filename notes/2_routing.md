@@ -113,7 +113,7 @@ metadata.title을 지정하지 않은 페이지의 output
 - 폴더 이름을 대괄호로 묶어 동적 세그먼트 생성
 - 해당 경로의 page.tsx에서 export 되는 default component의 props에는 params와 searchParams가 담겨있음
 
-```js
-// 123?region=kr&page=1
+```shell
+# 123?region=kr&page=1
 { params: { id: '123' }, searchParams: { region: 'kr', page: '1' } }
 ```
