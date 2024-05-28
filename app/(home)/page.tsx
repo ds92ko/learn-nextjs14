@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Not found'
+  title: 'Home'
 };
 
-export default function NotFound() {
+export default function Home() {
   return (
     <div>
-      <h1>Not found!</h1>
+      <h1>Hello NextJs!</h1>
     </div>
   );
 }
