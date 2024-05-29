@@ -95,3 +95,15 @@ export default async function Home() {
     return <div>{JSON.stringify(movies)}</div>;
     }
     ```
+   
+### Loading Components
+> server side에서 fetch하는 경우 응답을 기다리는 동안 렌더링 작업이 이루어 지지 않는데, 이때 로딩 컴포넌트를 사용해 로딩 UI를 노출 시킬 수 있음
+
+loading component의 작동 방식
+- 로딩 컴포넌트 사용 시 사용자에게는 로딩 UI를 노출하지만 실제로는 백엔드에서 로딩중이기 때문에 브라우저는 백엔드 작업이 완료되지 않았다고 생각함
+- streaming을 사용하면서 Next는 페이지의 HTML을 청크로 나누어 먼저 준비된 청크를 브라우저에게 반환하고 await이 끝나면 client에서 loading component를 await 된 component로 교체
+- UI가 렌더링 되기 전에 모든 데이터가 로드될 때까지 기다리지 않고 페이지의 일부를 빠르게 노출할 수 있음
+
+loading component 사용 법
+- 파일 명은 항상 `loading`이어야 함
+- `page`파일과 동일한 경로에 있어야 함
