@@ -4,3 +4,4 @@
 ### 📖 강의 노트
 1. [INTRODUCTION](notes/1_introduction.md)
 2. [ROUTING](notes/2_routing.md)
+3. [DATA FETCHING](notes/3_data_fetching.md)
