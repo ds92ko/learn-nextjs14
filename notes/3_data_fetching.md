@@ -107,3 +107,61 @@ loading component의 작동 방식
 loading component 사용 법
 - 파일 명은 항상 `loading`이어야 함
 - `page`파일과 동일한 경로에 있어야 함
+
+### Parallel Requests
+직렬 요청 방식
+```tsx
+async function getMovie(id: string) {
+   console.log(`Fetching movie: ${Date.now()}`);
+   await new Promise(resolve => setTimeout(resolve, 5000)); // 응답이 5초 걸린다고 가정
+   const response = await fetch(`${API_URL}/${id}`);
+   return response.json();
+}
+
+async function getVideos(id: string) {
+   console.log(`Fetching videos: ${Date.now()}`);
+   await new Promise(resolve => setTimeout(resolve, 5000)); // 응답이 5초 걸린다고 가정
+   const response = await fetch(`${API_URL}/${id}/videos`);
+   return response.json();
+}
+
+export default async function MovieDetail({ params: { id } }: { params: { id: string } }) {
+   console.log('start fetching');
+   const movie = await getMovie(id);
+   const videos = await getVideos(id);
+   console.log('end fetching');
+}
+```
+
+output
+- movie, videos fetch가 순차적으로 실행됨
+- 요청 시간 총 10초 + API 응답 시간 -> 최소 10초 이상 소요
+```shell
+start fetching
+Fetching movie: 1717382782714
+Fetching videos: 1717382788223
+end fetching
+GET /movies/653346 200 in 11006ms
+```
+
+병렬 요청 방식
+```deff
+export default async function MovieDetail({ params: { id } }: { params: { id: string } }) {
+  console.log('start fetching');
+- const movie = await getMovie(id);
+- const videos = await getVideos(id);
++ const [movie, videos] = await Promise.all([getMovie(id), getVideos(id)]);
+  console.log('end fetching');
+}
+```
+
+output
+- movie, videos fetch가 동시에 실행됨
+- 요청 시간 총 5초 + API 응답 시간 -> 최소 5초 이상 소요
+```shell
+start fetching
+Fetching movie: 1717383063742
+Fetching videos: 1717383063742
+end fetching
+GET /movies/653346 200 in 5528ms
+```
