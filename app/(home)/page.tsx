@@ -6,7 +6,6 @@ export const metadata: Metadata = {
 };
 
 async function getMovies() {
-  // await new Promise(resolve => setTimeout(resolve, 1000));
   const response = await fetch(process.env.NEXT_PUBLIC_API_URL);
   return await response.json();
 }

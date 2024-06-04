@@ -145,7 +145,7 @@ GET /movies/653346 200 in 11006ms
 ```
 
 병렬 요청 방식
-```deff
+```diff
 export default async function MovieDetail({ params: { id } }: { params: { id: string } }) {
   console.log('start fetching');
 - const movie = await getMovie(id);
@@ -165,3 +165,57 @@ Fetching videos: 1717383063742
 end fetching
 GET /movies/653346 200 in 5528ms
 ```
+
+### Suspense
+> Suspense로 병렬 요청을 분리해서 모든 응답이 끝날 때까지 기다리지 않고 응답이 끝난 데이터부터 바로 보여주기
+
+1. 각 요청을 컴포넌트로 분리<br/>
+   MovieInfo
+   - movie info에 관한 데이터만 fetch
+   ```tsx
+   async function getMovie(id: string) {
+     console.log(`Fetching movie: ${Date.now()}`);
+     await new Promise(resolve => setTimeout(resolve, 5000)); // 응답이 5초 걸린다고 가정
+     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`);
+     return response.json();
+   }
+   
+   export default async function MovieInfo({ id }: { id: string }) {
+     const movie = await getMovie(id);
+     return <h6>{JSON.stringify(movie)}</h6>;
+   }
+   ```
+   MovieVideos
+   - movie videos에 관한 데이터만 fetch
+   ```tsx
+   async function getVideos(id: string) {
+      console.log(`Fetching videos: ${Date.now()}`);
+      await new Promise(resolve => setTimeout(resolve, 3000)); // 응답이 3초 걸린다고 가정
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}/videos`);
+      return response.json();
+   }
+   
+   export default async function MovieVideos({ id }: { id: string }) {
+      const videos = await getVideos(id);
+      return <h6>{JSON.stringify(videos)}</h6>;
+   }
+   ```
+2. 상위에서 각 컴포넌트를 Suspense로 wrapping하고 fallback 지정
+   ```tsx
+   import MovieVideos from '../../../../components/movie-videos';
+   import MovieInfo from '../../../../components/movie-info';
+   import { Suspense } from 'react';
+   
+   export default async function MovieDetail({ params: { id } }: { params: { id: string } }) {
+      return (
+        <div>
+           <Suspense fallback={<h1>Loading movie info</h1>}>
+              <MovieInfo id={id} />
+           </Suspense>
+           <Suspense fallback={<h1>Loading movie videos</h1>}>
+              <MovieVideos id={id} />
+           </Suspense>
+        </div>
+      );
+   }
+   ```
