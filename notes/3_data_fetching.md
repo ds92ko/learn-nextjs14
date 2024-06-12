@@ -219,3 +219,10 @@ GET /movies/653346 200 in 5528ms
       );
    }
    ```
+   
+### Error Handling
+> error.tsx 파일로 에러 발생 시 보여질 UI를 노출 시킬 수 있음
+
+error handling 방법
+- 파일 명은 항상 `error`여야 함
+- `page` 파일과 동일한 경로에 있어야 함

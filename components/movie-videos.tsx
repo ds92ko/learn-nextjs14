@@ -1,6 +1,8 @@
 async function getVideos(id: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}/videos`);
-  return response.json();
+  await new Promise(resolve => setTimeout(resolve, 3000));
+  throw new Error('something broke...');
+  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}/videos`);
+  // return response.json();
 }
 
 export default async function MovieVideos({ id }: { id: string }) {
