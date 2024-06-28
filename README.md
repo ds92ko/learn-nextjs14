@@ -5,3 +5,4 @@
 1. [INTRODUCTION](notes/1_introduction.md)
 2. [ROUTING](notes/2_routing.md)
 3. [DATA FETCHING](notes/3_data_fetching.md)
+4. [DEPLOYMENT](notes/4_deployment.md)
